@@ -1,5 +1,6 @@
 package com.example.loginandsignup
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,20 +29,23 @@ import com.example.loginandsignup.Model.Result
 import com.example.loginandsignup.Model.Screens
 
 @Composable
-fun SignInByEmail(viewModel: ViewModel,navHostController: NavHostController){
+fun SignInByEmail(viewModel: ViewModel,navHostController: NavHostController,sharedPreferences: SharedPreferences){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var SEditor=sharedPreferences.edit()
     val AuthSignInResult by viewModel.AuthsignINResult.observeAsState()
     Column(modifier = Modifier
         .fillMaxSize()
         .background(color = colorResource(id = R.color.Pinkish)), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Text(text = "Sign In Screen", fontSize = 40.sp, fontFamily = FontFamily.Cursive, color = Color.White)
-        OutlinedTextField(value = email, onValueChange ={email=it}, label = { Text(text = "Email") }, shape = CircleShape, modifier = Modifier.height(60.dp))
+        OutlinedTextField(value = viewModel.Email.value, onValueChange ={viewModel.setEmail(it)}, label = { Text(text = "Email") }, shape = CircleShape, modifier = Modifier.height(60.dp))
         OutlinedTextField(value =password , onValueChange ={password=it}, visualTransformation = PasswordVisualTransformation(),label = { Text(text = " Password") }, shape = CircleShape, modifier = Modifier.height(60.dp))
-        Button(onClick = {viewModel.signinByEmail(email,password)
-            email=""
-            password=""
+        Button(onClick = {viewModel.signinByEmail(viewModel.Email.value,password)
             if (AuthSignInResult is Result.Sucess){
+                SEditor.putString("Email",viewModel.Email.value)
+                SEditor.apply()
+                viewModel.setEmail("")
+                password=""
                 navHostController.navigate(Screens.HomePage.Path)
             }
         }) {

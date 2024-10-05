@@ -6,4 +6,6 @@ sealed class Screens(var Path:String) {
     object SigninByEmail:Screens("SigninByEmail")
     object Phonepage:Screens("Phonepage")
     object HomePage:Screens("HomePage")
+    object Profile:Screens("Profile")
+    object user:Screens("user")
 }
