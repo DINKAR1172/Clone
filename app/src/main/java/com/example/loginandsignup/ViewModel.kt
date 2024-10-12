@@ -17,6 +17,11 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class ViewModel:ViewModel() {
+    private val _Age= mutableStateOf(0)
+    val Age:State<Int> =_Age
+    fun setAge(Age:Int){
+        _Age.value=Age
+    }
     private  val _name = mutableStateOf("")
     val name:State<String> =_name
     fun SetName(Name:String){

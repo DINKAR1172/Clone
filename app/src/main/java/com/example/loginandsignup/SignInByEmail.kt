@@ -46,7 +46,7 @@ fun SignInByEmail(viewModel: ViewModel,navHostController: NavHostController,shar
                 SEditor.apply()
                 viewModel.setEmail("")
                 password=""
-                navHostController.navigate(Screens.HomePage.Path)
+                navHostController.navigate(Screens.Mobile.Path)
             }
         }) {
             Text(text = "Login")

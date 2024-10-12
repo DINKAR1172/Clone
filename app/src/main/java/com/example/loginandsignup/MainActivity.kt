@@ -20,7 +20,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.Screens
+import com.example.loginandsignup.Screenss.DOB
+import com.example.loginandsignup.Screenss.Distance
+import com.example.loginandsignup.Screenss.Email
+import com.example.loginandsignup.Screenss.FirstPage
+import com.example.loginandsignup.Screenss.Habits
+import com.example.loginandsignup.Screenss.Mobile
+import com.example.loginandsignup.Screenss.Name
+import com.example.loginandsignup.Screenss.Photos
+import com.example.loginandsignup.Screenss.SOrientation
+import com.example.loginandsignup.Screenss.School
+import com.example.loginandsignup.Screenss.Sex
+import com.example.loginandsignup.Screenss.intrrest
+import com.example.loginandsignup.Screenss.look
 import com.example.loginandsignup.ui.theme.LoginAndSignUpTheme
 import java.time.LocalDateTime
 
@@ -35,13 +49,15 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
-                ) {
-                  Navigation(activity = this, sharepref = sharepref)
+                )
+                {
+                    Navigation(activity =this , sharepref =sharepref )
                 }
             }
         }
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(navHostController: NavHostController= rememberNavController(),activity: Activity,sharepref:SharedPreferences){
     val AuthviewModel:ViewModel= viewModel()
@@ -55,8 +71,15 @@ fun Navigation(navHostController: NavHostController= rememberNavController(),act
         composable(Screens.SigninByEmail.Path){
             SignInByEmail(AuthviewModel,navHostController,sharepref)
         }
+        composable(Screens.Email.Path){
+            Email(navController = navHostController, sharedPreferences =sharepref)
+        }
         composable(Screens.HomePage.Path){
-            HomePage(sharepref,AuthviewModel,navHostController)
+            FirstPage(navHostController)
+        }
+        composable(Screens.Mobile.Path
+        ){
+            Mobile(navController = navHostController, sharedPreferences =sharepref )
         }
         composable(Screens.Phonepage.Path){
             PhonePage(viewModel = AuthviewModel, activity =activity , navHostController =navHostController,sharepref)
@@ -67,7 +90,36 @@ fun Navigation(navHostController: NavHostController= rememberNavController(),act
         composable(Screens.user.Path){
             User(sharedPreferences = sharepref)
         }
-
+        composable(Screens.Name.Path){
+            Name(sharepref,navHostController)
+        }
+        composable((Screens.dob.Path)){
+            DOB(sharepref,navHostController)
+        }
+        composable(Screens.Sex.Path){
+            Sex(navHostController,sharepref)
+        }
+        composable(Screens.SO.Path){
+            SOrientation(navHostController,sharepref)
+        }
+        composable(Screens.Intrest.Path){
+            intrrest(navHostController,sharepref)
+        }
+        composable(Screens.look.Path){
+            look(navHostController,sharepref)
+        }
+        composable(Screens.distance.Path){
+            Distance(navHostController,sharepref)
+        }
+        composable(Screens.School.Path){
+            School(navHostController,sharepref)
+        }
+        composable(Screens.habit.Path){
+            Habits(navHostController,sharepref)
+        }
+        composable(Screens.Photos.Path){
+            Photos(navHostController,sharepref)
+        }
 
     }
 }

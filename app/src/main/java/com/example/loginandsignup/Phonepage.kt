@@ -24,11 +24,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.Result
 import com.example.loginandsignup.Model.Screens
 
 @Composable
 fun PhonePage(viewModel: ViewModel,activity: Activity,navHostController: NavHostController,sharedPreferences: SharedPreferences){
+    var email by remember { mutableStateOf(sharedPreferences.getString(Shareprefff.Email.key,null)) }
     var Phone by remember { mutableStateOf("") }
     val resultPhone by viewModel.PhoneSignIn.observeAsState()
     var displayotp by remember { mutableStateOf(false) }
@@ -50,7 +52,7 @@ fun PhonePage(viewModel: ViewModel,activity: Activity,navHostController: NavHost
                if(resultPhone is Result.Sucess){
                    viewModel.Phonenumber.value?.let { editor.putLong("MobileNumber", it) }
                    editor.apply()
-                   navHostController.navigate(Screens.HomePage.Path)
+                   navHostController.navigate(Screens.Email.Path)
                }
            }) {
                Text(text = "Verifiy", color = Color.White)

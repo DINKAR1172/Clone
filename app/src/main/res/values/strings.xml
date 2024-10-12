@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Login and SignUp</string>
     <string name="Web_client_id">899251643872-3fu0hcuqv03g4nico77mk57083p1vdc1.apps.googleusercontent.com</string>
+    <string name="Email">Email</string>
 
 </resources>
