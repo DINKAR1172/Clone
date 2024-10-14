@@ -36,11 +36,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.R
+import com.example.loginandsignup.VM.VMM
+import com.example.loginandsignup.ViewModel
 
 @Composable
-fun Distance(navController: NavController, sharedPreferences: SharedPreferences){
+fun Distance(navController: NavController, sharedPreferences: SharedPreferences,viewModel:VMM){
+val editor=sharedPreferences.edit()
     var Distance by remember { mutableStateOf(0f) }
     Column(
         modifier = Modifier
@@ -51,13 +55,14 @@ fun Distance(navController: NavController, sharedPreferences: SharedPreferences)
     ) {
         Column(){
             LinearProgressIndicator(
-                progress = 1.0f, trackColor = Color.Gray, color = colorResource(
+                progress = viewModel.pi.value, trackColor = Color.Gray, color = colorResource(
                     id = R.color.Pinkish
                 ), modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
             )
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {navController.navigateUp()
+                viewModel.setPi(-0.1f)}) {
                 Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription = null)
             }
             Text(
@@ -86,7 +91,10 @@ fun Distance(navController: NavController, sharedPreferences: SharedPreferences)
                 text = "You can change Prefrences later in Settings",
                 color = Color.Gray
             )
-            Button(onClick = {navController.navigate(Screens.School.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = {editor.putFloat(Shareprefff.distance.key,Distance)
+                editor.apply()
+                navController.navigate(Screens.School.Path)
+                viewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Next", color = Color.White)
             }
         }

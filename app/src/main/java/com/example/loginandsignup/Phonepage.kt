@@ -50,7 +50,7 @@ fun PhonePage(viewModel: ViewModel,activity: Activity,navHostController: NavHost
             OutlinedTextField(value = otp, onValueChange ={otp=it}, label = { Text(text = "Enter otp")})
            Button(onClick = {viewModel.PhoneSignin(OTP = otp)
                if(resultPhone is Result.Sucess){
-                   viewModel.Phonenumber.value?.let { editor.putLong("MobileNumber", it) }
+                   editor.putString(Shareprefff.Phone.key,Phone)
                    editor.apply()
                    navHostController.navigate(Screens.Email.Path)
                }

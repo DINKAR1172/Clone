@@ -36,13 +36,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.R
+import com.example.loginandsignup.VM.VMM
 
 @Composable
-fun Sex(navController: NavController,sharedPreferences: SharedPreferences) {
+fun Sex(navController: NavController,sharedPreferences: SharedPreferences,viewModel:VMM) {
+    val editor=sharedPreferences.edit()
     var checkBoxx by remember { mutableStateOf(false) }
     var selectedButton by remember{ mutableStateOf<Int?>(null) }
+    var gender by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,13 +56,14 @@ fun Sex(navController: NavController,sharedPreferences: SharedPreferences) {
     ) {
         Column {
             LinearProgressIndicator(
-                progress = 1.0f, trackColor = Color.Gray, color = colorResource(
+                progress = viewModel.pi.value, trackColor = Color.Gray, color = colorResource(
                     id = R.color.Pinkish
                 ), modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
             )
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {navController.navigateUp()
+                viewModel.setPi(-0.1f)}) {
                 Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription = null)
             }
             Text(
@@ -68,7 +73,8 @@ fun Sex(navController: NavController,sharedPreferences: SharedPreferences) {
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 40.sp
             )
-            Button(onClick = {selectedButton=1}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)), shape = CircleShape, modifier = Modifier.fillMaxWidth()
+            Button(onClick = {selectedButton=1
+                             gender="Women"}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)), shape = CircleShape, modifier = Modifier.fillMaxWidth()
                 , border =if (selectedButton==1){
                 BorderStroke(2.dp, Color.Black)
             }
@@ -77,7 +83,8 @@ fun Sex(navController: NavController,sharedPreferences: SharedPreferences) {
             }) {
                 Text(text = "Women", color = Color.Black)
             }
-            Button(onClick = {selectedButton=2}, border =if (selectedButton==2){
+            Button(onClick = {selectedButton=2
+                             gender="Men"}, border =if (selectedButton==2){
                 BorderStroke(2.dp, Color.Black)
             }
             else{
@@ -85,7 +92,8 @@ fun Sex(navController: NavController,sharedPreferences: SharedPreferences) {
             } ,colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Men", color = Color.Black)
             }
-            Button(onClick = {selectedButton=3}, border =if (selectedButton==3){
+            Button(onClick = {selectedButton=3
+                             gender="Not Specified"}, border =if (selectedButton==3){
                 BorderStroke(2.dp, Color.Black)
             }
             else{
@@ -101,7 +109,10 @@ fun Sex(navController: NavController,sharedPreferences: SharedPreferences) {
                     colorResource(id =R.color.Pinkish)))
                 Text(text = "Show my gender on my profile")
             }
-            Button(onClick = {navController.navigate(Screens.SO.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = {editor.putString(Shareprefff.Gender.key,gender)
+                editor.apply()
+                navController.navigate(Screens.SO.Path)
+                             viewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Next", color = Color.White)
             }
         }

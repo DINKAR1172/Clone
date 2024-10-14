@@ -33,23 +33,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.R
+import com.example.loginandsignup.VM.VMM
 
 @Composable
-fun Name(sharedPreferences: SharedPreferences,navController: NavController){
-    
+fun Name(sharedPreferences: SharedPreferences,navController: NavController,viewmodel:VMM){
+    val editor =sharedPreferences.edit()
     var naming by remember { mutableStateOf("") }
     Column (modifier = Modifier
         .fillMaxSize()
         .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween){
         Column {
-            LinearProgressIndicator(progress =1.0f, trackColor =Color.Gray, color = colorResource(
+            LinearProgressIndicator(progress =viewmodel.pi.value, trackColor =Color.Gray, color = colorResource(
                 id = R.color.Pinkish
             ), modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp))
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {navController.navigateUp()
+            viewmodel.setPi(-0.1f)}) {
                 Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription =null)
             }
             Text(text = "Whats Your first name ?", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
@@ -59,7 +62,10 @@ fun Name(sharedPreferences: SharedPreferences,navController: NavController){
             Text(text = "This is how it will appear on your profile.", color = Color.Gray)
             Text(text = "cannot change it later ", color = Color.Blue)
         }
-        Button(onClick = {navController.navigate(Screens.dob.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = {editor.putString(Shareprefff.Name.key,naming)
+            editor.apply()
+            navController.navigate(Screens.dob.Path)
+                         viewmodel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Next", color = Color.White)
         }
 

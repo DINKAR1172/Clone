@@ -26,6 +26,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,9 +41,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.R
+import com.example.loginandsignup.VM.VMM
+import com.google.gson.Gson
 
 @Composable
-fun Habits(navController: NavController,sharedPreferences: SharedPreferences){
+fun Habits(navController: NavController,sharedPreferences: SharedPreferences,ViewModel: VMM){
+    val editor=sharedPreferences.edit()
+    var HabitList= arrayListOf<String>()
+    val gson=Gson()
+    var s1 by remember { mutableStateOf(0) }
+    var s2 by remember { mutableStateOf(0) }
+    var s3 by remember { mutableStateOf(0) }
+    var s4 by remember { mutableStateOf(0) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,13 +62,14 @@ fun Habits(navController: NavController,sharedPreferences: SharedPreferences){
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             LinearProgressIndicator(
-                progress = 1.0f, trackColor = Color.Gray, color = colorResource(
+                progress =ViewModel.pi.value, trackColor = Color.Gray, color = colorResource(
                     id = R.color.Pinkish
                 ), modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
             )
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {navController.navigateUp()
+                ViewModel.setPi(-0.1f)}) {
                 Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription = null)
             }
             Text(
@@ -207,7 +221,8 @@ fun Habits(navController: NavController,sharedPreferences: SharedPreferences){
 
 
             }
-            Button(onClick = {navController.navigate(Screens.Photos.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = {navController.navigate(Screens.Photos.Path)
+                ViewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Next", color = Color.White)
             }
         }

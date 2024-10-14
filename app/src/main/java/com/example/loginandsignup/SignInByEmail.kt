@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.Result
 import com.example.loginandsignup.Model.Screens
 
@@ -42,7 +43,7 @@ fun SignInByEmail(viewModel: ViewModel,navHostController: NavHostController,shar
         OutlinedTextField(value =password , onValueChange ={password=it}, visualTransformation = PasswordVisualTransformation(),label = { Text(text = " Password") }, shape = CircleShape, modifier = Modifier.height(60.dp))
         Button(onClick = {viewModel.signinByEmail(viewModel.Email.value,password)
             if (AuthSignInResult is Result.Sucess){
-                SEditor.putString("Email",viewModel.Email.value)
+                SEditor.putString(Shareprefff.Email.key,viewModel.Email.value)
                 SEditor.apply()
                 viewModel.setEmail("")
                 password=""

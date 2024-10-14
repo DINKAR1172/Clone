@@ -35,6 +35,7 @@ import com.example.loginandsignup.Screenss.School
 import com.example.loginandsignup.Screenss.Sex
 import com.example.loginandsignup.Screenss.intrrest
 import com.example.loginandsignup.Screenss.look
+import com.example.loginandsignup.VM.VMM
 import com.example.loginandsignup.ui.theme.LoginAndSignUpTheme
 import java.time.LocalDateTime
 
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 )
                 {
-                    Navigation(activity =this , sharepref =sharepref )
+                    Navigation(activity = this, sharepref =sharepref )
                 }
             }
         }
@@ -61,6 +62,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Navigation(navHostController: NavHostController= rememberNavController(),activity: Activity,sharepref:SharedPreferences){
     val AuthviewModel:ViewModel= viewModel()
+    val VMM:VMM= viewModel()
     NavHost(navController =navHostController, startDestination =Screens.firstpage.Path){
         composable(Screens.firstpage.Path){
             SignUp(navHostController)
@@ -91,34 +93,34 @@ fun Navigation(navHostController: NavHostController= rememberNavController(),act
             User(sharedPreferences = sharepref)
         }
         composable(Screens.Name.Path){
-            Name(sharepref,navHostController)
+            Name(sharepref,navHostController,VMM)
         }
         composable((Screens.dob.Path)){
-            DOB(sharepref,navHostController)
+            DOB(sharepref,navHostController,VMM)
         }
         composable(Screens.Sex.Path){
-            Sex(navHostController,sharepref)
+            Sex(navHostController,sharepref,VMM)
         }
         composable(Screens.SO.Path){
-            SOrientation(navHostController,sharepref)
+            SOrientation(navHostController,sharepref,VMM)
         }
         composable(Screens.Intrest.Path){
-            intrrest(navHostController,sharepref)
+            intrrest(navHostController,sharepref,VMM)
         }
         composable(Screens.look.Path){
-            look(navHostController,sharepref)
+            look(navHostController,sharepref,VMM)
         }
         composable(Screens.distance.Path){
-            Distance(navHostController,sharepref)
+            Distance(navHostController,sharepref,VMM)
         }
         composable(Screens.School.Path){
-            School(navHostController,sharepref)
+            School(navHostController,sharepref,VMM)
         }
         composable(Screens.habit.Path){
-            Habits(navHostController,sharepref)
+            Habits(navHostController,sharepref,VMM)
         }
         composable(Screens.Photos.Path){
-            Photos(navHostController,sharepref)
+            Photos(navHostController,sharepref,VMM)
         }
 
     }

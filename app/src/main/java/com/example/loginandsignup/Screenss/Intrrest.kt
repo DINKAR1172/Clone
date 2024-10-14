@@ -34,12 +34,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.R
+import com.example.loginandsignup.VM.VMM
+import com.google.gson.Gson
 
 @Composable
-fun intrrest(navController: NavController, sharedPreferences: SharedPreferences) {
+fun intrrest(navController: NavController, sharedPreferences: SharedPreferences,viewModel:VMM) {
+    val editor =sharedPreferences.edit()
     var selectedButton by remember { mutableStateOf(0)}
+    var IntrestAns by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,13 +54,14 @@ fun intrrest(navController: NavController, sharedPreferences: SharedPreferences)
     ) {
         Column(modifier = Modifier.padding(8.dp)){
             LinearProgressIndicator(
-                progress = 1.0f, trackColor = Color.Gray, color = colorResource(
+                progress = viewModel.pi.value, trackColor = Color.Gray, color = colorResource(
                     id = R.color.Pinkish
                 ), modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
             )
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {navController.navigateUp()
+                viewModel.setPi(-0.1f)}) {
                 Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription = null)
             }
             Text(
@@ -65,7 +71,8 @@ fun intrrest(navController: NavController, sharedPreferences: SharedPreferences)
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 40.sp
             )
-            Button(onClick = {selectedButton=1}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)), shape = CircleShape, modifier = Modifier.fillMaxWidth()
+            Button(onClick = {selectedButton=1
+                             IntrestAns="Women"}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)), shape = CircleShape, modifier = Modifier.fillMaxWidth()
                 , border =if (selectedButton==1){
                     BorderStroke(2.dp, Color.Black)
                 }
@@ -74,7 +81,8 @@ fun intrrest(navController: NavController, sharedPreferences: SharedPreferences)
                 }) {
                 Text(text = "Women", color = Color.Black)
             }
-            Button(onClick = {selectedButton=2}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)), shape = CircleShape, modifier = Modifier.fillMaxWidth()
+            Button(onClick = {selectedButton=2
+                IntrestAns="men"}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)), shape = CircleShape, modifier = Modifier.fillMaxWidth()
                 , border =if (selectedButton==2){
                     BorderStroke(2.dp, Color.Black)
                 }
@@ -83,7 +91,8 @@ fun intrrest(navController: NavController, sharedPreferences: SharedPreferences)
                 }) {
                 Text(text = "Men", color = Color.Black)
             }
-            Button(onClick = {selectedButton=3}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)), shape = CircleShape, modifier = Modifier.fillMaxWidth()
+            Button(onClick = {selectedButton=3
+                IntrestAns="Everyone"}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white)), shape = CircleShape, modifier = Modifier.fillMaxWidth()
                 , border =if (selectedButton==3){
                     BorderStroke(2.dp, Color.Black)
                 }
@@ -93,7 +102,11 @@ fun intrrest(navController: NavController, sharedPreferences: SharedPreferences)
                 Text(text = "Everyone", color = Color.Black)
             }
         }
-            Button(onClick = {navController.navigate(Screens.look.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = {
+                editor.putString(Shareprefff.Intrest.key,IntrestAns)
+                editor.apply()
+                navController.navigate(Screens.look.Path)
+                             viewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Next", color = Color.White)
             }
 

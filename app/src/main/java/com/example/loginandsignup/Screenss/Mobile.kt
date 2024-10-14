@@ -31,11 +31,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.R
 
 @Composable
 fun Mobile(navController:NavController,sharedPreferences: SharedPreferences){
+    val editor = sharedPreferences.edit()
     var Mobile by remember { mutableStateOf("") }
     Column (modifier = Modifier
         .fillMaxSize()
@@ -59,7 +61,9 @@ fun Mobile(navController:NavController,sharedPreferences: SharedPreferences){
                 onValueChange = { Mobile = it },
                 placeholder = { Text(text = "Enter Phone Number") })
         }
-        Button(onClick = {navController.navigate(Screens.HomePage.Path)}, colors = ButtonDefaults.buttonColors(
+        Button(onClick = {editor.putString(Shareprefff.Phone.key,Mobile)
+            editor.apply()
+            navController.navigate(Screens.HomePage.Path)}, colors = ButtonDefaults.buttonColors(
             colorResource(id = R.color.Pinkish)
         ), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Continue", color = Color.White)

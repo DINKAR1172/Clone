@@ -39,18 +39,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.SO
 import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.R
+import com.example.loginandsignup.VM.VMM
 
 @Composable
-fun SOrientation(navController: NavController,sharedPreferences: SharedPreferences){
+fun SOrientation(navController: NavController,sharedPreferences: SharedPreferences,viewModel:VMM){
+    val editor=sharedPreferences.edit()
     val context = LocalContext.current
     var  SOList = mutableListOf<SO>(SO(id=1,"Straight"),
         SO(id=2,"Gay"),SO(3,"Lesbian"),
         SO(4,"Bisexual"), SO(5,"Asexual"), SO(6,"Demisexual"), SO(7,"Queer"),SO(8,"Bicurious"),
         SO(9,"Aromantic"))
     var s1 by remember{ mutableStateOf<Int?>(null) }
+    var selectedAns1 by remember { mutableStateOf("") }
+    var selectedAns2 by remember { mutableStateOf("") }
+    var selectedAns3 by remember { mutableStateOf("") }
     var s2 by remember{ mutableStateOf<Int?>(null) }
     var s3 by remember{ mutableStateOf<Int?>(null) }
     var checkBoxx by remember { mutableStateOf(false) }
@@ -63,13 +69,14 @@ fun SOrientation(navController: NavController,sharedPreferences: SharedPreferenc
     ) {
         Column(verticalArrangement = Arrangement.SpaceBetween) {
             LinearProgressIndicator(
-                progress = 1.0f, trackColor = Color.Gray, color = colorResource(
+                progress =viewModel.pi.value, trackColor = Color.Gray, color = colorResource(
                     id = R.color.Pinkish
                 ), modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
             )
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {navController.navigateUp()
+                viewModel.setPi(-0.1f)}) {
                 Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription = null)
             }
             Text(
@@ -91,16 +98,20 @@ fun SOrientation(navController: NavController,sharedPreferences: SharedPreferenc
                             }
                         ,modifier = Modifier.clickable { if (s1==null){
                         s1=SO.id
+                            selectedAns1=SO.Orientation
                     }
                     else if (s2==null){
                         s2=SO.id
+                            selectedAns2=SO.Orientation
                     }
                     else if(s3==null){
                         s3=SO.id
+                            selectedAns3=SO.Orientation
                     }
                     else{
                         Toast.makeText(context,"You have already selected 3 options",Toast.LENGTH_LONG).show()
-                    }})
+                    }
+                      })
 
                 }
             }
@@ -112,7 +123,21 @@ fun SOrientation(navController: NavController,sharedPreferences: SharedPreferenc
                     colorResource(id =R.color.Pinkish)))
                 Text(text = "Show my orientation on my profile")
             }
-            Button(onClick = {navController.navigate(Screens.Intrest.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = {
+                if(selectedAns1!=""){
+                    editor.putString(Shareprefff.SO1.key,selectedAns1)
+                editor.apply()
+                }
+                if (selectedAns2!=""){
+                    editor.putString(Shareprefff.SO2.key,selectedAns2)
+               editor.apply()
+                }
+                if (selectedAns3!=""){
+                    editor.putString(Shareprefff.SO3.key,selectedAns3)
+                    editor.apply()
+                }
+                navController.navigate(Screens.Intrest.Path)
+                             viewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Next", color = Color.White)
             }
         }

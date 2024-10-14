@@ -38,6 +38,7 @@ import com.example.loginandsignup.R
 
 @Composable
 fun Email(navController:NavController,sharedPreferences: SharedPreferences){
+    val editor =sharedPreferences.edit()
     var Email by remember { mutableStateOf("") }
     Column (modifier = Modifier
         .fillMaxSize()
@@ -61,7 +62,9 @@ fun Email(navController:NavController,sharedPreferences: SharedPreferences){
                 onValueChange = { Email = it },
                 placeholder = { Text(text = "Enter Email") })
         }
-        Button(onClick = {navController.navigate(Screens.HomePage.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = {editor.putString(Shareprefff.Email.key,Email)
+            editor.apply()
+            navController.navigate(Screens.HomePage.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Continue", color = Color.White)
         }
     }

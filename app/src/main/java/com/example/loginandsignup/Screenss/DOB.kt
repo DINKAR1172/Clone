@@ -39,17 +39,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.loginandsignup.Constant.Shareprefff
 import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.R
+import com.example.loginandsignup.VM.VMM
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Formatter
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DOB(sharedPreferences: SharedPreferences, navController: NavController){
+fun DOB(sharedPreferences: SharedPreferences,navController: NavController,viewModel: VMM){
+    val Formatter= DateTimeFormatter.ofPattern("dd/MM/YYYY")
+    var Day by remember { mutableStateOf("") }
+    val editor =sharedPreferences.edit()
     var dd by remember { mutableStateOf(false) }
     var din by remember { mutableStateOf("") }
     var DateState= rememberDatePickerState()
@@ -57,12 +65,13 @@ fun DOB(sharedPreferences: SharedPreferences, navController: NavController){
         .fillMaxSize()
         .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween){
         Column {
-            LinearProgressIndicator(progress =1.0f, trackColor = Color.Gray, color = colorResource(
+            LinearProgressIndicator(progress =viewModel.pi.value, trackColor = Color.Gray, color = colorResource(
                 id = R.color.Pinkish
             ), modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp))
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {navController.navigateUp()
+                viewModel.setPi(-0.1f)}) {
                 Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription =null)
             }
             Text(text = "Your b-day?", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
@@ -70,7 +79,7 @@ fun DOB(sharedPreferences: SharedPreferences, navController: NavController){
                 Text(text ="DatePickDialog")
             }
             if(DateState.selectedDateMillis!=null){
-                Text(text = din)
+                Text(text =Day)
             }
             else{
                 Text(text = "Select a Date")
@@ -79,6 +88,11 @@ fun DOB(sharedPreferences: SharedPreferences, navController: NavController){
             if (dd==true){
                 DatePickerDialog(onDismissRequest = {dd=false}, confirmButton = { Button(onClick = {
                     if(DateState.selectedDateMillis!=null){
+                        var din = mutableStateOf(LocalDateTime.ofInstant(Instant.ofEpochMilli(
+                            DateState.selectedDateMillis!!
+                        ), ZoneId.systemDefault()))
+                        Day=din.value.format(Formatter)
+
                     }
 
                     dd=false}, colors = ButtonDefaults.buttonColors(
@@ -91,16 +105,13 @@ fun DOB(sharedPreferences: SharedPreferences, navController: NavController){
             }
         }
 
-        Button(onClick = {navController.navigate(Screens.Sex.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = {editor.putString(Shareprefff.DateofBirth.key,Day)
+            editor.apply()
+            navController.navigate(Screens.Sex.Path)
+                         viewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Next", color = Color.White)
         }
     }
 }
-@Composable
-@RequiresApi(Build.VERSION_CODES.O)
-fun FormatDateTime(TimeStamp:Long):String{
-var Date by remember { mutableStateOf(LocalDateTime.ofInstant(Instant.ofEpochMilli(TimeStamp),
-    ZoneId.systemDefault())) }
-    val Formatter=DateTimeFormatter.ofPattern("dd/MM/YYYY")
-    return Date.format(Formatter)
-}
+
+
