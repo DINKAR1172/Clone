@@ -13,7 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -21,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.loginandsignup.Constant.Shareprefff
+import com.example.loginandsignup.Model.PermissionHandlerr
 import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.Screenss.DOB
 import com.example.loginandsignup.Screenss.Distance
@@ -44,6 +50,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val contextt = LocalContext.current
             val sharepref=getSharedPreferences("UserData", Context.MODE_PRIVATE)
             LoginAndSignUpTheme {
                 // A surface container using the 'background' color from the theme
@@ -52,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 )
                 {
-                    Navigation(activity = this, sharepref =sharepref )
+                    Navigation(activity = this, sharepref =sharepref, context = contextt)
                 }
             }
         }
@@ -60,7 +67,9 @@ class MainActivity : ComponentActivity() {
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Navigation(navHostController: NavHostController= rememberNavController(),activity: Activity,sharepref:SharedPreferences){
+fun Navigation(navHostController: NavHostController= rememberNavController(),activity: Activity,sharepref:SharedPreferences,context: Context){
+    var AlreadyLogined by remember { mutableStateOf(sharepref.getBoolean(Shareprefff.logined.key,false)) }
+    val PermissionCheck=PermissionHandlerr(context)
     val AuthviewModel:ViewModel= viewModel()
     val VMM:VMM= viewModel()
     NavHost(navController =navHostController, startDestination =Screens.firstpage.Path){
@@ -87,10 +96,10 @@ fun Navigation(navHostController: NavHostController= rememberNavController(),act
             PhonePage(viewModel = AuthviewModel, activity =activity , navHostController =navHostController,sharepref)
         }
         composable(Screens.Profile.Path){
-            Profile(navHostController)
+            Profile(navHostController,VMM)
         }
         composable(Screens.user.Path){
-            User(sharedPreferences = sharepref)
+            User(VMM,sharepref,navHostController)
         }
         composable(Screens.Name.Path){
             Name(sharepref,navHostController,VMM)
@@ -120,7 +129,7 @@ fun Navigation(navHostController: NavHostController= rememberNavController(),act
             Habits(navHostController,sharepref,VMM)
         }
         composable(Screens.Photos.Path){
-            Photos(navHostController,sharepref,VMM)
+            Photos(navHostController,sharepref,VMM,PermissionCheck,context)
         }
 
     }

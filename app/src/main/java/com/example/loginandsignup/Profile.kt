@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -28,9 +31,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.loginandsignup.Model.Screens
+import com.example.loginandsignup.VM.VMM
 
 @Composable
-fun Profile(navController: NavController){
+fun Profile(navController: NavController,viewModel:VMM){
     var abc by remember { mutableStateOf("") }
 Column(modifier = Modifier
     .fillMaxSize()
@@ -43,6 +47,12 @@ Column(modifier = Modifier
         )})
         IconButton(onClick = {navController.navigate(Screens.user.Path)}) {
             Icon(imageVector = Icons.Default.AccountCircle, contentDescription =null)
+        }
+    }
+    Spacer(modifier = Modifier.height(20.dp))
+    LazyVerticalGrid(columns = GridCells.Fixed(2)){
+        items(viewModel.FileUriList){photo->
+LazyUserDisplay(data = photo)
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.loginandsignup.Constant
 
 sealed class Shareprefff(val key:String){
+    object logined:Shareprefff("logined")
     object Email:Shareprefff("Email")
     object Phone:Shareprefff("Phone")
     object Name:Shareprefff("Name")
