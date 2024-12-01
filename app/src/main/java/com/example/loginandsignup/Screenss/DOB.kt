@@ -3,15 +3,20 @@ package com.example.loginandsignup.Screenss
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,7 +38,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,57 +68,83 @@ fun DOB(sharedPreferences: SharedPreferences,navController: NavController,viewMo
     var dd by remember { mutableStateOf(false) }
     var din by remember { mutableStateOf("") }
     var DateState= rememberDatePickerState()
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween){
-        Column {
-            LinearProgressIndicator(progress =viewModel.pi.value, trackColor = Color.Gray, color = colorResource(
-                id = R.color.Pinkish
-            ), modifier = Modifier
-                .fillMaxWidth()
-                .height(8.dp))
-            IconButton(onClick = {navController.navigateUp()
-                viewModel.setPi(-0.1f)}) {
-                Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription =null)
-            }
-            Text(text = "Your b-day?", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
-            Button(onClick = {dd=true}) {
-                Text(text ="DatePickDialog")
-            }
-            if(DateState.selectedDateMillis!=null){
-                Text(text =Day)
-            }
-            else{
-                Text(text = "Select a Date")
-            }
-
-            if (dd==true){
-                DatePickerDialog(onDismissRequest = {dd=false}, confirmButton = { Button(onClick = {
-                    if(DateState.selectedDateMillis!=null){
-                        var din = mutableStateOf(LocalDateTime.ofInstant(Instant.ofEpochMilli(
-                            DateState.selectedDateMillis!!
-                        ), ZoneId.systemDefault()))
-                        Day=din.value.format(Formatter)
-
+    Scaffold(topBar = {
+        TopAppBar(navigationIcon = { androidx.compose.material.IconButton(onClick = {navController.navigateUp()
+            viewModel.setPi(-0.1f)}) {
+            androidx.compose.material.Icon(imageVector =Icons.Default.KeyboardArrowLeft, contentDescription =null, tint = Color.White)
+        }
+        },backgroundColor = colorResource(id = R.color.Orangess) , title = { Text(fontWeight = FontWeight.ExtraBold, fontSize = 40.sp,text = "Data Collection", color = Color.White)})
+    }){
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(it), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween){
+            Column {
+                LinearProgressIndicator(progress =viewModel.pi.value, trackColor = Color.Gray, color = colorResource(
+                    id = R.color.Pinkish
+                ), modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+                    Column {
+                        Text(text = "Select", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+                        Text(text = "your ", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+                        Text(text = "Date of Birth ", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
                     }
+                    Image(painter = painterResource(id = R.drawable.calendar_svgrepo_com), contentDescription =null)
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally){
+                    if(DateState.selectedDateMillis!=null){
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                            Icon(imageVector = Icons.Default.DateRange, contentDescription =null)
+                            Text(text ="Selected Date :", fontWeight = FontWeight.Bold, fontSize = 25.sp)
+                            Text(text =Day, fontWeight = FontWeight.Bold, fontSize = 25.sp, color = colorResource(
+                                id = R.color.Orangess
+                            ))     
+                        }
+                       
+                    }
+                    else{
+                        Text(text = "No Date Selected", fontWeight = FontWeight.Bold, fontSize = 25.sp)
+                    }
+                }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+                    Button(onClick = {dd=true}, shape = RectangleShape,colors = ButtonDefaults.buttonColors(colorResource(
+                        id = R.color.Orangess
+                    ))) {
+                        Text(text ="Select Date")
+                    }
+                }
 
-                    dd=false}, colors = ButtonDefaults.buttonColors(
-                    Color.Green
-                )) {
-                    Text(text = "Confirm", color = Color.White)
-                }}) {
-                    DatePicker(state =DateState)
+                if (dd==true){
+                    DatePickerDialog(onDismissRequest = {dd=false}, confirmButton = { Button(onClick = {
+                        if(DateState.selectedDateMillis!=null){
+                            var din = mutableStateOf(LocalDateTime.ofInstant(Instant.ofEpochMilli(
+                                DateState.selectedDateMillis!!
+                            ), ZoneId.systemDefault()))
+                            Day=din.value.format(Formatter)
+
+                        }
+
+                        dd=false}, colors = ButtonDefaults.buttonColors(
+                        Color.Green
+                    )) {
+                        Text(text = "Confirm", color = Color.White)
+                    }}) {
+                        DatePicker(state =DateState)
+                    }
                 }
             }
-        }
 
-        Button(onClick = {editor.putString(Shareprefff.DateofBirth.key,Day)
-            editor.apply()
-            navController.navigate(Screens.Sex.Path)
-                         viewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Next", color = Color.White)
+            Button(onClick = {editor.putString(Shareprefff.DateofBirth.key,Day)
+                editor.apply()
+                navController.navigate(Screens.Sex.Path)
+                viewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Orangess)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Next", color = Color.White)
+            }
         }
     }
+
 }
 
 

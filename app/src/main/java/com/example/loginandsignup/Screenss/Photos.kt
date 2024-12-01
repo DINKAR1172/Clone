@@ -16,13 +16,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
@@ -45,7 +49,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.loginandsignup.Constant.Shareprefff
@@ -78,48 +85,78 @@ fun Photos(navController: NavController,sharedPreferences: SharedPreferences,Vie
 
        } )
     var PhotoList = mutableListOf<UU>()
-Column (modifier = Modifier
-    .fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween){
-    Column {
-        LinearProgressIndicator(
-            progress =ViewModel.pi.value, trackColor = Color.Gray, color = colorResource(
-                id = R.color.Pinkish
-            ), modifier = Modifier
-                .fillMaxWidth()
-                .height(8.dp)
-        )
-        IconButton(onClick = {navController.navigateUp()
-            ViewModel.setPi(-0.1f)}) {
-            Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription = null)
-        }
+    Scaffold(topBar = {
+        TopAppBar(
+            navigationIcon = {
+                androidx.compose.material.IconButton(onClick = {
+                    navController.navigateUp()
+                    ViewModel.setPi(-0.1f)
+                }) {
+                    androidx.compose.material.Icon(
+                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+            },
+            backgroundColor = colorResource(id = R.color.Orangess),
+            title = {
+                Text(
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 40.sp,
+                    text = "Data Collection",
+                    color = Color.White
+                )
+            })
+    }) {
+        Column (modifier = Modifier
+            .fillMaxSize().padding(it),horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween){
+            Column {
+                LinearProgressIndicator(
+                    progress =ViewModel.pi.value, trackColor = Color.Gray, color = colorResource(
+                        id = R.color.Pinkish
+                    ), modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp)
+                )
 
-        }
-    if (!perm){
-        Button(onClick = {launcherp.launch(Manifest.permission.READ_MEDIA_IMAGES)}, colors = ButtonDefaults.buttonColors(
-            colorResource(id = R.color.purple_700)
-        ), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Request Permission to Access Gallery", color = Color.White)
-        }
-    }
-    else{
-        LazyHorizontalGrid( contentPadding = PaddingValues(10.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalArrangement = Arrangement.Center, rows = GridCells.Fixed(3), modifier = Modifier
-            .height(500.dp)
-            .fillMaxWidth()){
-            items(PhotoLis){data->
-                LazyPhotodisplay(data = data,context,ViewModel)
             }
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+                Column {
+                    Text(text = "Provide us ", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+                    Text(text = "Some Picture", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+                    Text(text = "for your profile ", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+                }
+                Image(painter = painterResource(id = R.drawable.photos_svgrepo_com), contentDescription =null)
+            }
+            if (!perm){
+                Button(onClick = {launcherp.launch(Manifest.permission.READ_MEDIA_IMAGES)}, colors = ButtonDefaults.buttonColors(
+                    colorResource(id = R.color.purple_700)
+                ), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Request Permission to Access Gallery", color = Color.White)
+                }
+            }
+            else{
+                LazyHorizontalGrid( contentPadding = PaddingValues(10.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalArrangement = Arrangement.Center, rows = GridCells.Fixed(3), modifier = Modifier
+                    .height(500.dp)
+                    .fillMaxWidth()){
+                    items(PhotoLis){data->
+                        LazyPhotodisplay(data = data,context,ViewModel)
+                    }
+                }
+
+            }
+            Button(onClick = {editor.putBoolean(Shareprefff.logined.key,true)
+                editor.apply()
+                navController.navigate(Screens.Profile.Path)
+                ViewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(
+                colorResource(id = R.color.Orangess)
+            ), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Next", color = Color.White)
+            }
+        }
     }
 
-        }
-    Button(onClick = {editor.putBoolean(Shareprefff.logined.key,true)
-        editor.apply()
-        navController.navigate(Screens.Profile.Path)
-        ViewModel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(
-        colorResource(id = R.color.Pinkish)
-    ), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
-        Text(text = "Next", color = Color.White)
-    }
-    }
 
 }
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)

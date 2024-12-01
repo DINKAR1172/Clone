@@ -45,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
@@ -52,15 +53,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.loginandsignup.Constant.Shareprefff
+import com.example.loginandsignup.GooglePresentation.Sign_in.GoogleSignin
+import com.example.loginandsignup.Model.Screens
 import com.example.loginandsignup.VM.VMM
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun User(viewModel:VMM,sharedPreferences: SharedPreferences,navController: NavController){
+fun User(viewModel:VMM,sharedPreferences: SharedPreferences,navController: NavController,GoolgeClient:GoogleSignin,viewMMOdel:ViewModel,lifecycleCoroutineScope: LifecycleCoroutineScope){
+    val editor=sharedPreferences.edit()
     var name by remember { mutableStateOf(sharedPreferences.getString(Shareprefff.Name.key,null))}
     var email by remember { mutableStateOf(sharedPreferences.getString(Shareprefff.Email.key,null))}
     var mobile by remember { mutableStateOf(sharedPreferences.getString(Shareprefff.Phone.key,null))}
@@ -70,11 +76,13 @@ fun User(viewModel:VMM,sharedPreferences: SharedPreferences,navController: NavCo
     var s02 by remember { mutableStateOf(sharedPreferences.getString(Shareprefff.SO2.key,null))}
     var s03 by remember { mutableStateOf(sharedPreferences.getString(Shareprefff.SO3.key,null))}
     var Intrest by remember { mutableStateOf(sharedPreferences.getString(Shareprefff.Intrest.key,null))}
-    var Habits by remember { mutableStateOf(sharedPreferences.getString(Shareprefff.habit.key,null))}
+    var Habits by remember { mutableStateOf(sharedPreferences.getString(Shareprefff.habit1.key,null))}
     var Distance by remember { mutableStateOf(sharedPreferences.getFloat(Shareprefff.distance.key,0.0f))}
     var Uri by remember { mutableStateOf<Uri?>(null) }
+    val GoogleAuthUsed by remember { mutableStateOf(sharedPreferences.getBoolean(Shareprefff.GoogleSignIn.key,false)) }
     val launcherP= rememberLauncherForActivityResult(contract =ActivityResultContracts.PickVisualMedia(), onResult ={aa->
         Uri=aa })
+    val User=GoolgeClient.getSignedinUser()
     Column {
         Row(modifier = Modifier.fillMaxWidth(.63f), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
                IconButton(onClick = {navController.navigateUp()}) {
@@ -82,63 +90,89 @@ fun User(viewModel:VMM,sharedPreferences: SharedPreferences,navController: NavCo
                    }
             Text(text = "Profile", fontSize = 40.sp, fontFamily = FontFamily.Cursive, color = colorResource(id = R.color.Pinkish))
                }
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-            if (Uri==null){
-                Image(imageVector =Icons.Default.AccountCircle, contentDescription =null, modifier = Modifier
-                    .background(color = Color.White, shape = CircleShape)
-                    .size(150.dp)
-                    .clickable { launcherP.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) })
-            }
-            else{
-                AsyncImage(model = Uri, contentDescription =null, modifier = Modifier
-                    .background(color = Color.White, shape = CircleShape)
-                    .size(150.dp))
+        if (GoogleAuthUsed){
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top){
+                if (User != null) {
+                    AsyncImage(model = User.UserPictureUrl, contentDescription =null, modifier = Modifier
+                        .background(color = Color.White, shape = CircleShape)
+                        .size(150.dp)
+                        .clip(CircleShape))
+                }
+                if (User != null) {
+                    User.UserName?.let { Text(text = it) }
+                }
+                Button(onClick = {lifecycleCoroutineScope.launch {
+                    GoolgeClient.signOut()
+                }
+                editor.putBoolean(Shareprefff.GoogleSignIn.key,false)
+                editor.apply()
+                navController.navigate(Screens.firstpage.Path)}) {
+                    Text(text = "SignOut")
+                }
             }
 
         }
-        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally){
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-                Text(text = "Name:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
-                Text(text = "$name", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+        else{
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                if (Uri==null){
+                    Image(imageVector =Icons.Default.AccountCircle, contentDescription =null, modifier = Modifier
+                        .background(color = Color.White, shape = CircleShape)
+                        .size(150.dp)
+                        .clickable { launcherP.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) })
+                }
+                else{
+                    AsyncImage(model = Uri, contentDescription =null, modifier = Modifier
+                        .background(color = Color.White, shape = CircleShape)
+                        .size(150.dp).clip(CircleShape))
+                }
+
             }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-                Text(text = "Email:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
-                Text(text = "$email", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-            }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-                Text(text = "Mobile:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
-                Text(text = "$mobile", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-            }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-                Text(text = "Gender:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
-                Text(text = "$Gender", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-            }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-                Text(text = "Date of Birth:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
-                Text(text = "$Dob", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-            }
-          /* Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-               Text(text = "Sexual Orientation:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
-               Text(text = "$s01", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-               Text(text = "$s02", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-               Text(text = "$s03", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-           }*/
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-                Text(text = "Distance Preffered:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
-                Text(text = "${Distance}Km", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-            }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-                Text(text = "Intrest:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
-                Text(text = "$Intrest", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-            }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
-                Text(text = "Habits:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
-                Text(text = "$Habits", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
-            }
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally){
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                    Text(text = "Name:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
+                    Text(text = "$name", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                    Text(text = "Email:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
+                    Text(text = "$email", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                    Text(text = "Mobile:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
+                    Text(text = "$mobile", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                    Text(text = "Gender:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
+                    Text(text = "$Gender", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                    Text(text = "Date of Birth:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
+                    Text(text = "$Dob", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                }
+                /* Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                     Text(text = "Sexual Orientation:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
+                     Text(text = "$s01", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                     Text(text = "$s02", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                     Text(text = "$s03", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                 }*/
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                    Text(text = "Distance Preffered:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
+                    Text(text = "${Distance.toInt()}Km", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                    Text(text = "Intrest:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
+                    Text(text = "$Intrest", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                    Text(text = "Habits:", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.black))
+                    Text(text = "$Habits", fontSize = 20.sp, fontFamily = FontFamily.Monospace, color = colorResource(id = R.color.teal_700))
+                }
 
 
+            }
         }
+
+
+
     }
 
 }

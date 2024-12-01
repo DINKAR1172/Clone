@@ -5,6 +5,22 @@
       <entry key="Dis">
         <State />
       </entry>
+      <entry key="DisplayScreen">
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\91898\.android\avd\Copy_of_Copy_of_Copy_of_Caster.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-11-21T06:39:04.587137Z" />
+        </State>
+      </entry>
       <entry key="Testing">
         <State />
       </entry>
@@ -16,12 +32,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\91898\.android\avd\Copy_of_Copy_of_Pixel_7_API_34ffj.avd" />
+                  <value value="C:\Users\91898\.android\avd\Copy_of_Copy_of_Copy_of_Caster.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-10-12T06:32:09.799781100Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-11-26T12:24:55.017717Z" />
         </State>
       </entry>
     </value>

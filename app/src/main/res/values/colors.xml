@@ -8,4 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Pinkish">#FD3A73</color>
+    <color name="Link">#7f00ff</color>
+    <color name="Orangess">#f98129</color>
+    <color name="GreenScreen">#00b140</color>
+    <color name="Skin">#ff6745</color>
 </resources>

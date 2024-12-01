@@ -50,18 +50,29 @@ android {
     }
 }
 
-dependencies {
+dependencies { val compose_version = "1.6.0-alpha06"
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    implementation ("androidx.compose.ui:ui:<compose_version>")
+    implementation ("androidx.compose.material3:material3:<compose_version>")
+    implementation ("androidx.compose.runtime:runtime-livedata:<compose_version>")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:<coroutines_version>")
+    implementation("androidx.compose.ui:ui:$compose_version")
+    implementation("androidx.compose.material:material:$compose_version")
+    implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
     implementation ("com.google.code.gson:gson:2.8.9")
-
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:<lifecycle_version>")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:<lifecycle_version>")
     implementation ("androidx.activity:activity-compose:1.6.1")
     implementation ("androidx.compose.material3:material3:1.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
-            implementation("androidx.lifecycle:lifecycle-viewmodel:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.6.1")
     implementation("androidx.compose.animation:animation:1.6.7")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.7")
     implementation("androidx.navigation:navigation-compose:2.7.5")
-implementation("io.coil-kt:coil-compose:2.4.0" )
+    implementation("io.coil-kt:coil-compose:2.4.0" )
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
@@ -81,4 +92,5 @@ implementation("io.coil-kt:coil-compose:2.4.0" )
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 }

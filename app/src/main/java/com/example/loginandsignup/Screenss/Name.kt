@@ -1,8 +1,10 @@
 package com.example.loginandsignup.Screenss
 
 import android.content.SharedPreferences
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,7 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -28,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -42,34 +48,54 @@ import com.example.loginandsignup.VM.VMM
 fun Name(sharedPreferences: SharedPreferences,navController: NavController,viewmodel:VMM){
     val editor =sharedPreferences.edit()
     var naming by remember { mutableStateOf("") }
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween){
-        Column {
+    Scaffold(topBar = {
+        TopAppBar(navigationIcon = { androidx.compose.material.IconButton(onClick = {navController.navigateUp()}) {
+        androidx.compose.material.Icon(imageVector =Icons.Default.KeyboardArrowLeft, contentDescription =null, tint = Color.White)
+    }
+        },backgroundColor = colorResource(id = R.color.Orangess) , title = { Text(fontWeight = FontWeight.ExtraBold, fontSize = 40.sp,text = "Data Collection", color = Color.White)})
+    }){
+        Column (modifier = Modifier
+            .fillMaxSize()
+            .padding(it), horizontalAlignment = Alignment.CenterHorizontally){
             LinearProgressIndicator(progress =viewmodel.pi.value, trackColor =Color.Gray, color = colorResource(
                 id = R.color.Pinkish
             ), modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp))
-            IconButton(onClick = {navController.navigateUp()
-            viewmodel.setPi(-0.1f)}) {
-                Icon(imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription =null)
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+                Column {
+                    Text(text = "Here's", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+                    Text(text = "your first", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+                    Text(text = "step with ", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+                    Text(text = "us!", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+                }
+                Image(painter = painterResource(id = R.drawable._040027_3538318), contentDescription =null)
             }
-            Text(text = "Whats Your first name ?", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
-            OutlinedTextField(modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp),value =naming, onValueChange ={naming=it}, placeholder = {Text(text = "Enter your name")})
-            Text(text = "This is how it will appear on your profile.", color = Color.Gray)
-            Text(text = "cannot change it later ", color = Color.Blue)
-        }
-        Button(onClick = {editor.putString(Shareprefff.Name.key,naming)
-            editor.apply()
-            navController.navigate(Screens.dob.Path)
-                         viewmodel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Next", color = Color.White)
-        }
+            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top){
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(text ="Please Enter Your Name", color = colorResource(id = R.color.black), fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold, fontSize = 25.sp)
+                Spacer(modifier = Modifier.height(5.dp))
+                OutlinedTextField(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),value =naming, onValueChange ={naming=it}, label = {Text(text = " Name")}, prefix = { Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription =null
+                )})
+                Text(text = "This is how it will appear on your profile.", color = Color.Gray)
+                Text(text = "cannot change it later ", color = Color.Black)
+                Spacer(modifier = Modifier.height(30.dp))
+                Button(onClick = {editor.putString(Shareprefff.Name.key,naming)
+                    editor.apply()
+                    navController.navigate(Screens.dob.Path)
+                    viewmodel.setPi(0.1f)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Orangess)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Next", color = Color.White)
+                }
+            }
 
-        }
+
+        } 
+    }
+    
 
 
 }

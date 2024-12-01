@@ -28,7 +28,7 @@ fun FirstPage(navController: NavController){
 Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
     Column {
 
-        Text(text = "Welcome to LinkUp", color = colorResource(id = R.color.Pinkish), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
+        Text(text = "Welcome to LinkUp", color = colorResource(id = R.color.Orangess), fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
         Text(text = "Please follow these House Rules", color = Color.Gray)
     }
     Column {
@@ -54,7 +54,7 @@ Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Spac
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(3.dp)){
-        Button(onClick = {navController.navigate(Screens.Name.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Pinkish)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = {navController.navigate(Screens.Name.Path)}, colors = ButtonDefaults.buttonColors(colorResource(id = R.color.Orangess)), shape = CircleShape, modifier = Modifier.fillMaxWidth()) {
            Text(text = "I agree", color = Color.White)            
         }
     }

@@ -14,5 +14,9 @@ sealed class Shareprefff(val key:String){
     object look:Shareprefff("Look")
     object distance:Shareprefff("Distance")
     object school:Shareprefff("School")
-    object habit:Shareprefff("Habit")
+    object habit1:Shareprefff("Habit1")
+    object habit2:Shareprefff("Habit2")
+    object habit3:Shareprefff("Habit3")
+    object habit4:Shareprefff("Habit4")
+    object GoogleSignIn:Shareprefff("GoogleSignIn")
 }

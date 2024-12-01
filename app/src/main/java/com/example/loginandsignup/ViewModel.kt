@@ -3,21 +3,39 @@ package com.example.loginandsignup
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.loginandsignup.GooglePresentation.Sign_in.SignInState
 import com.example.loginandsignup.Model.AuthRepo
 import com.example.loginandsignup.Model.Injection
 import com.example.loginandsignup.Model.Result
+import com.example.loginandsignup.Model.SignINResult
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class ViewModel:ViewModel() {
+    private val _GoogleState=MutableStateFlow(SignInState())
+    val GoogleState=_GoogleState.asStateFlow()
     private val _Age= mutableStateOf(0)
+    fun OnsignINResult(result:SignINResult){
+      _GoogleState.update { it.copy(
+          isSignINSucessful = result.UserData!=null,
+          signInError = result.errorMessage
+      ) }
+    }
+    fun ResetState(){
+        _GoogleState.update { SignInState() }
+    }
     val Age:State<Int> =_Age
     fun setAge(Age:Int){
         _Age.value=Age
